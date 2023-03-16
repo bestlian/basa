@@ -1,0 +1,49 @@
+[{
+    "_id":"1",
+    "kata":"abdi",
+    "arti_indo":"kata ganti orang pertama atau subject",
+    "arti_sunda":"",
+    "tipe":"halus",
+    "sinonim":[
+        {
+            "_id":"x1",
+            "kata":"aing",
+            "arti_indo":"kata ganti orang pertama atau subject",
+            "arti_sunda":"",
+            "tipe":"kasar"
+        },
+        {
+            "_id":"x2",
+            "kata":"urang",
+            "arti_indo":"kata ganti orang pertama atau subject",
+            "arti_sunda":"",
+            "tipe":"loma"
+        }
+    ],
+    "antonim":"2"
+},
+{
+    "_id":"2",
+    "kata":"anjeun",
+    "arti_indo":"kata ganti orang kedua atau object",
+    "arti_sunda":"",
+    "arti":"",
+    "tipe":"halus",
+    "sinonim":[
+        {
+            "_id":"y1",
+            "kata":"sia",
+            "arti_indo":"kata ganti orang kedua atau object",
+            "arti_sunda":"",
+            "tipe":"kasar"
+        },
+        {
+            "_id":"y2",
+            "kata":"maneh",
+            "arti_indo":"kata ganti orang kedua atau object",
+            "arti_sunda":"",
+            "tipe":"loma"
+        }
+    ],
+    "antonim":"1"
+}]
