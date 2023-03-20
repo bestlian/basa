@@ -1,4 +1,4 @@
-namespace BasaProject
+namespace BasaProject.Outputs
 {
     public class WeatherForecast
     {
