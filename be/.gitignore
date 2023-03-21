@@ -31,7 +31,7 @@ msbuild.err
 msbuild.wrn
 
 BasaProject/appsettings.json
-BasaProject/appsettings.Development.json
+# BasaProject/appsettings.Development.json
 
 # Visual Studio 2019
 .vs/

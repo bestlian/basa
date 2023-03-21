@@ -15,10 +15,7 @@ public class DataContext : DbContext
         options.UseNpgsql(Configuration.GetConnectionString("BasaDB"));
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder) => base.OnModelCreating(modelBuilder);
 
     public DbSet<MsUser> MsUsers { get; set; }
     public DbSet<MsRole> MsRoles { get; set; }
