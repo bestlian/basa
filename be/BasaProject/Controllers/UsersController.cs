@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Authorize]
+[Route("[controller]")]
 public class UsersController : ControllerBase
 {
     private IUserService _userService;
@@ -19,8 +20,7 @@ public class UsersController : ControllerBase
 
     // LOGIN WITH PASSWORD
     [AllowAnonymous]
-    [HttpPost]
-    [Route("Users/login")]
+    [HttpPost("login")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Message), StatusCodes.Status200OK)]
@@ -35,7 +35,7 @@ public class UsersController : ControllerBase
     }
 
 
-    [Route("Users/{id}")]
+    [HttpGet("{id}")]
     [Produces("application/json")]
     [Authorize(Roles = "1")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -46,12 +46,12 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-    private string IpAddress()
+    private string? IpAddress()
     {
         if (Request.Headers.ContainsKey("X-Forwarded-For"))
             return Request.Headers["X-Forwarded-For"];
         else
-            return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            return HttpContext.Connection?.RemoteIpAddress?.MapToIPv4().ToString();
     }
 
     private void DeleteTokenCookie()

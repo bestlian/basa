@@ -8,15 +8,13 @@ namespace BasaProject.Models
     {
         [Key]
         [MaxLength(50)]
-        public string? ID { get; set; }
+        public Guid ID { get; set; } = Guid.NewGuid();
         [MaxLength(50)]
-        public string? FirstWord { get; set; }
+        public Guid FirstWord { get; set; }
         [MaxLength(255)]
         public string? SecondWord { get; set; }
-        [MaxLength(50)]
-        public string? UserIn { get; set; }
-        [MaxLength(50)]
-        public string? UserUp { get; set; }
+        public Guid? UserIn { get; set; }
+        public Guid? UserUp { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime DateIn { get; set; } = DateTime.Now;

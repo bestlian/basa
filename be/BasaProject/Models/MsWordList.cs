@@ -8,7 +8,7 @@ namespace BasaProject.Models
     {
         [Key]
         [MaxLength(50)]
-        public string? WordID { get; set; }
+        public Guid WordID { get; set; } = Guid.NewGuid();
         [MaxLength(255)]
         public string? Word { get; set; }
         public string? Desc { get; set; }
@@ -16,10 +16,8 @@ namespace BasaProject.Models
         public string? Indonesian { get; set; }
         [MaxLength(255)]
         public string? English { get; set; }
-        [MaxLength(50)]
-        public string? UserIn { get; set; }
-        [MaxLength(50)]
-        public string? UserUp { get; set; }
+        public Guid? UserIn { get; set; }
+        public Guid? UserUp { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime DateIn { get; set; } = DateTime.Now;

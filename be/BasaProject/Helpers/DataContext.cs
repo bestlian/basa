@@ -7,12 +7,17 @@ public class DataContext : DbContext
 {
     protected readonly IConfiguration Configuration;
 
-    public DataContext(IConfiguration configuration) => Configuration = configuration;
+    public DataContext()
+    {
+    }
+    public DataContext(DbContextOptions options) : base(options)
+    {
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         // connect to postgres with connection string from app settings
-        options.UseNpgsql(Configuration.GetConnectionString("BasaDB"));
+        //options.UseNpgsql(Configuration.GetConnectionString("BasaDB"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) => base.OnModelCreating(modelBuilder);

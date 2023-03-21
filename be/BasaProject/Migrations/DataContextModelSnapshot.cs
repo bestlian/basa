@@ -24,9 +24,10 @@ namespace BasaProject.Migrations
 
             modelBuilder.Entity("BasaProject.Models.MsBasaLemes", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateIn")
                         .HasColumnType("timestamp with time zone");
@@ -34,9 +35,9 @@ namespace BasaProject.Migrations
                     b.Property<DateTime?>("DateUp")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FirstWord")
+                    b.Property<Guid>("FirstWord")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasMaxLength(1)
@@ -46,13 +47,11 @@ namespace BasaProject.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("UserIn")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserIn")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("UserUp")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserUp")
+                        .HasColumnType("uuid");
 
                     b.HasKey("ID");
 
@@ -83,13 +82,11 @@ namespace BasaProject.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("UserIn")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserIn")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("UserUp")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserUp")
+                        .HasColumnType("uuid");
 
                     b.HasKey("RoleID");
 
@@ -98,9 +95,10 @@ namespace BasaProject.Migrations
 
             modelBuilder.Entity("BasaProject.Models.MsUser", b =>
                 {
-                    b.Property<string>("UserID")
+                    b.Property<Guid>("UserID")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateIn")
                         .HasColumnType("timestamp with time zone");
@@ -126,13 +124,11 @@ namespace BasaProject.Migrations
                     b.Property<int?>("RoleID")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserIn")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserIn")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("UserUp")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserUp")
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserID");
 
@@ -143,9 +139,10 @@ namespace BasaProject.Migrations
 
             modelBuilder.Entity("BasaProject.Models.MsWordList", b =>
                 {
-                    b.Property<string>("WordID")
+                    b.Property<Guid>("WordID")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateIn")
                         .HasColumnType("timestamp with time zone");
@@ -168,13 +165,11 @@ namespace BasaProject.Migrations
                         .HasMaxLength(1)
                         .HasColumnType("boolean");
 
-                    b.Property<string>("UserIn")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserIn")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("UserUp")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("UserUp")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Word")
                         .HasMaxLength(255)
@@ -189,7 +184,9 @@ namespace BasaProject.Migrations
                 {
                     b.HasOne("BasaProject.Models.MsWordList", "Word")
                         .WithMany()
-                        .HasForeignKey("FirstWord");
+                        .HasForeignKey("FirstWord")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Word");
                 });

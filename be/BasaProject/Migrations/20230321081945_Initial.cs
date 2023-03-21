@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-#nullable disable
-
 namespace BasaProject.Migrations
 {
     /// <inheritdoc />
@@ -19,8 +17,8 @@ namespace BasaProject.Migrations
                     RoleID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    UserIn = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    UserUp = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    UserIn = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserUp = table.Column<Guid>(type: "uuid", nullable: true),
                     DateIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateUp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", maxLength: 1, nullable: false)
@@ -34,13 +32,13 @@ namespace BasaProject.Migrations
                 name: "MsWordLists",
                 columns: table => new
                 {
-                    WordID = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    WordID = table.Column<Guid>(type: "uuid", maxLength: 50, nullable: false),
                     Word = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Desc = table.Column<string>(type: "text", nullable: true),
                     Indonesian = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     English = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    UserIn = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    UserUp = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    UserIn = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserUp = table.Column<Guid>(type: "uuid", nullable: true),
                     DateIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateUp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", maxLength: 1, nullable: false)
@@ -54,13 +52,13 @@ namespace BasaProject.Migrations
                 name: "MsUsers",
                 columns: table => new
                 {
-                    UserID = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    UserID = table.Column<Guid>(type: "uuid", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     RoleID = table.Column<int>(type: "integer", nullable: true),
-                    Name = table.Column<string>(type: "character varying(255)", nullable: true),
-                    UserIn = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    UserUp = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    UserIn = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserUp = table.Column<Guid>(type: "uuid", nullable: true),
                     DateIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateUp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", maxLength: 1, nullable: false)
@@ -79,11 +77,11 @@ namespace BasaProject.Migrations
                 name: "MsBasaLemes",
                 columns: table => new
                 {
-                    ID = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    FirstWord = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    ID = table.Column<Guid>(type: "uuid", maxLength: 50, nullable: false),
+                    FirstWord = table.Column<Guid>(type: "uuid", maxLength: 50, nullable: false),
                     SecondWord = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    UserIn = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    UserUp = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    UserIn = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserUp = table.Column<Guid>(type: "uuid", nullable: true),
                     DateIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateUp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", maxLength: 1, nullable: false)
@@ -95,7 +93,8 @@ namespace BasaProject.Migrations
                         name: "FK_MsBasaLemes_MsWordLists_FirstWord",
                         column: x => x.FirstWord,
                         principalTable: "MsWordLists",
-                        principalColumn: "WordID");
+                        principalColumn: "WordID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

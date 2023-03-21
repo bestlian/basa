@@ -11,12 +11,12 @@ namespace BasaProject.Outputs
         public string? RefreshToken { get; set; }
 
 
-        public AuthenticateResponse(UserResponse user, string token, string refreshToken)
+        public AuthenticateResponse(UserResponse user, string? token, string? refreshToken)
         {
-            UserID = user.UserID;
-            Name = user.Name;
-            RoleID = user.RoleID;
-            RoleName = user.RoleName;
+            UserID = user?.UserID;
+            Name = user?.Name;
+            RoleID = user?.RoleID;
+            RoleName = user?.RoleName;
             BearerToken = token;
             RefreshToken = refreshToken;
         }

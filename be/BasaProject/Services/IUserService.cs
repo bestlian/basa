@@ -1,5 +1,6 @@
 namespace BasaProject.Services;
 
+using System;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,10 +12,10 @@ using BCHash = BCrypt.Net.BCrypt;
 
 public interface IUserService
 {
-    AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
+    AuthenticateResponse? Authenticate(AuthenticateRequest model, string? ipAddress);
     // AuthenticateResponse RefreshToken(string token, string ipAddress, string from);
     IEnumerable<UserResponse> GetAll();
-    UserResponse GetById(string id);
+    UserResponse? GetById(string id);
     // bool RevokeToken(string token, string ipAddress);
 }
 
@@ -33,7 +34,7 @@ public class UserServices : IUserService
         _appSettings = appSettings.Value;
     }
 
-    public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
+    public AuthenticateResponse? Authenticate(AuthenticateRequest model, string? ipAddress)
     {
         var user = _users.SingleOrDefault(x => x.Email == model.Email && x.Password == model.Password);
 
@@ -72,7 +73,7 @@ public class UserServices : IUserService
         return _users;
     }
 
-    public UserResponse GetById(string id)
+    public UserResponse? GetById(string id)
     {
         return _users.FirstOrDefault(x => x.UserID == id);
     }

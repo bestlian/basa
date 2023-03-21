@@ -12,10 +12,8 @@ namespace BasaProject.Models
         [Display(Name = "Role Name")]
         [MaxLength(255)]
         public string? RoleName { get; set; }
-        [MaxLength(50)]
-        public string? UserIn { get; set; }
-        [MaxLength(50)]
-        public string? UserUp { get; set; }
+        public Guid? UserIn { get; set; }
+        public Guid? UserUp { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime DateIn { get; set; } = DateTime.Now;
