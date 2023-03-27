@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
+#nullable disable
+
 namespace BasaProject.Migrations
 {
     /// <inheritdoc />
@@ -16,7 +18,7 @@ namespace BasaProject.Migrations
                 {
                     RoleID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    RoleName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     UserIn = table.Column<Guid>(type: "uuid", nullable: true),
                     UserUp = table.Column<Guid>(type: "uuid", nullable: true),
                     DateIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -106,6 +108,9 @@ namespace BasaProject.Migrations
                 name: "IX_MsUsers_RoleID",
                 table: "MsUsers",
                 column: "RoleID");
+
+            migrationBuilder.Sql("INSERT INTO public.\"MsRoles\" (\"RoleID\", \"RoleName\", \"DateIn\", \"IsDeleted\") VALUES(1, 'super admin', current_timestamp, false),(2, 'admin', current_timestamp, false),(3, 'staff', current_timestamp, false),(4, 'contributor', current_timestamp, false);");
+            migrationBuilder.Sql("INSERT INTO public.\"MsUsers\" (\"UserID\", \"Email\", \"Password\", \"RoleID\", \"Name\", \"UserIn\", \"UserUp\", \"DateIn\", \"DateUp\", \"IsDeleted\") VALUES('c2b47e63-a625-43d3-b8ab-4e0e8e61d3d7'::uuid, 'admin@basa.id', '$2a$11$DMVT28XqNcCOJsw8RzCqcO7uNZlDzheuovX8n3/BMHTHpbAtXi56S', 1, 'Super Admin', NULL, NULL, '2023-03-27 14:41:21.657', NULL, false);");
         }
 
         /// <inheritdoc />

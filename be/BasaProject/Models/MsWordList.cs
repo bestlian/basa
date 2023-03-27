@@ -10,12 +10,12 @@ namespace BasaProject.Models
         [MaxLength(50)]
         public Guid WordID { get; set; } = Guid.NewGuid();
         [MaxLength(255)]
-        public string? Word { get; set; }
-        public string? Desc { get; set; }
+        public string Word { get; set; }
+        public string Desc { get; set; }
         [MaxLength(255)]
-        public string? Indonesian { get; set; }
+        public string Indonesian { get; set; }
         [MaxLength(255)]
-        public string? English { get; set; }
+        public string English { get; set; }
         public Guid? UserIn { get; set; }
         public Guid? UserUp { get; set; }
 

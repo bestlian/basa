@@ -12,7 +12,7 @@ namespace BasaProject.Models
         [MaxLength(50)]
         public Guid FirstWord { get; set; }
         [MaxLength(255)]
-        public string? SecondWord { get; set; }
+        public string SecondWord { get; set; }
         public Guid? UserIn { get; set; }
         public Guid? UserUp { get; set; }
 
@@ -26,6 +26,6 @@ namespace BasaProject.Models
         public Boolean IsDeleted { get; set; } = false;
 
         [ForeignKey("FirstWord")]
-        public virtual MsWordList? Word { get; set; }
+        public virtual MsWordList Word { get; set; }
     }
 }

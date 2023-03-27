@@ -17,6 +17,7 @@ builder.Services.AddControllers();
 // configure DI for application services
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
 // configure jwt authentication
 var appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 var key = Encoding.ASCII.GetBytes(appSettings.Secret);
@@ -47,8 +48,8 @@ builder.Services.AddSwaggerGen(c =>
         c.SwaggerDoc("v1", new OpenApiInfo
         {
             Version = "v1",
-            Title = "Binus University E-Office API",
-            Description = "API documentation for Binus E-Office Application, authentication required with jwt."
+            Title = "Basa Project API",
+            Description = "API documentation for Basa Project Application, authentication required with jwt."
         });
 
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -79,6 +80,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

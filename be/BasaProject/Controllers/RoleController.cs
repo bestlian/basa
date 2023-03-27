@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class RoleController : ControllerBase
 {
     private readonly DataContext _db;
@@ -18,6 +19,7 @@ public class RoleController : ControllerBase
     }
 
     // set role
+    [AllowAnonymous]
     [HttpGet("all")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -45,7 +47,7 @@ public class RoleController : ControllerBase
         if (string.IsNullOrEmpty(rolename)) return BadRequest();
 
         var check = _db.MsRoles.FirstOrDefault(a => a.RoleName.ToLower() == rolename.Trim().ToLower() && a.IsDeleted == false);
-        if (check == null)
+        if (check != null)
         {
             alert.Msg = "Role name has already exist!";
             alert.Statuscode = 400;

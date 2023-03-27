@@ -4,18 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 using BasaProject.Models;
 using BasaProject.Services;
 using BasaProject.Outputs;
+using BasaProject.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using BCHash = BCrypt.Net.BCrypt;
 
 [ApiController]
-[Authorize]
 [Route("[controller]")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private IUserService _userService;
+    private readonly DataContext _db;
 
-    public UsersController(IUserService userService)
+    public UsersController(IUserService userService, DataContext dataContext)
     {
         _userService = userService;
+        _db = dataContext;
     }
 
     // LOGIN WITH PASSWORD
@@ -26,10 +30,16 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(Message), StatusCodes.Status200OK)]
     public IActionResult Authenticate(AuthenticateRequest model)
     {
+        var alert = new Message();
         var response = _userService.Authenticate(model, IpAddress());
 
         if (response == null)
-            return BadRequest(new { message = "Email or password is incorrect" });
+        {
+            alert.Statuscode = 400;
+            alert.Msg = "Email or password is incorrect";
+            return BadRequest(alert);
+
+        }
 
         return Ok(response);
     }
@@ -46,7 +56,55 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-    private string? IpAddress()
+    // create user
+    [HttpPost("create")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Message), StatusCodes.Status200OK)]
+    public IActionResult Create(UserRequest f)
+    {
+        var alert = new Message();
+        if (ModelState.IsValid)
+        {
+            var check = _db.MsUsers.FirstOrDefault(a => a.Email == f.Email && a.IsDeleted == false);
+            if (check != null)
+            {
+                alert.Statuscode = 400;
+                alert.Msg = "Email is already exist!";
+
+                return StatusCode(400, alert);
+            }
+
+            try
+            {
+                var user = new MsUser()
+                {
+                    Email = f.Email,
+                    Password = BCHash.HashPassword(f.Password),
+                    RoleID = f.RoleID,
+                    Name = f.Name
+                };
+
+                _db.Add(user);
+                _db.SaveChanges();
+
+                alert.Msg = "Create new user successful";
+                alert.Statuscode = 200;
+                return Ok(alert);
+            }
+            catch (Exception ex)
+            {
+                alert.Msg = "Error: " + ex.Message;
+                alert.Statuscode = 500;
+                return StatusCode(500, alert);
+            }
+
+        }
+
+        return BadRequest();
+    }
+
+    private string IpAddress()
     {
         if (Request.Headers.ContainsKey("X-Forwarded-For"))
             return Request.Headers["X-Forwarded-For"];

@@ -9,34 +9,31 @@ using System.Text;
 using BasaProject.Outputs;
 using BasaProject.Models;
 using BCHash = BCrypt.Net.BCrypt;
+using BasaProject.Helpers;
 
 public interface IUserService
 {
-    AuthenticateResponse? Authenticate(AuthenticateRequest model, string? ipAddress);
+    AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
     // AuthenticateResponse RefreshToken(string token, string ipAddress, string from);
     IEnumerable<UserResponse> GetAll();
-    UserResponse? GetById(string id);
+    UserResponse GetById(Guid id);
     // bool RevokeToken(string token, string ipAddress);
 }
 
 public class UserServices : IUserService
 {
-    // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-    private List<UserResponse> _users = new List<UserResponse>
-    {
-        new UserResponse { UserID = "1", Email = "test.user@abc.co", Name = "Tes User", RoleID = 1, RoleName = "Tes Role", Password = "123" }
-    };
-
     private readonly AppSettings _appSettings;
+    private readonly DataContext _db;
 
-    public UserServices(IOptions<AppSettings> appSettings)
+    public UserServices(IOptions<AppSettings> appSettings, DataContext dataContext)
     {
         _appSettings = appSettings.Value;
+        _db = dataContext;
     }
 
-    public AuthenticateResponse? Authenticate(AuthenticateRequest model, string? ipAddress)
+    public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
     {
-        var user = _users.SingleOrDefault(x => x.Email == model.Email && x.Password == model.Password);
+        var user = UserHelper.GetByEmail(model.Email, _db);
 
         // return null if user not found
         if (user == null) return null;
@@ -60,7 +57,7 @@ public class UserServices : IUserService
             Email = user.Email,
             Name = user.Name,
             RoleID = user.RoleID,
-            RoleName = user.RoleName
+            RoleName = user.Role.RoleName
         };
         //var tok = GetToken(config);
         var jwtToken = generateJwtToken(resp);
@@ -70,12 +67,12 @@ public class UserServices : IUserService
 
     public IEnumerable<UserResponse> GetAll()
     {
-        return _users;
+        return UserHelper.GetAll(_db);
     }
 
-    public UserResponse? GetById(string id)
+    public UserResponse GetById(Guid id)
     {
-        return _users.FirstOrDefault(x => x.UserID == id);
+        return UserHelper.Find(id, _db);
     }
 
     private string generateJwtToken(UserResponse val)
@@ -85,7 +82,7 @@ public class UserServices : IUserService
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", val.UserID), new Claim(ClaimTypes.Role, val.RoleID.ToString()) }),
+            Subject = new ClaimsIdentity(new[] { new Claim("id", val.UserID.ToString()), new Claim(ClaimTypes.Role, val.RoleID.ToString()) }),
             Expires = DateTime.Now.AddDays(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };

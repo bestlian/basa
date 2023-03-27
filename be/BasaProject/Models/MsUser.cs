@@ -9,11 +9,11 @@ namespace BasaProject.Models
         [MaxLength(50)]
         public Guid UserID { get; set; } = Guid.NewGuid();
         [MaxLength(255)]
-        public string? Email { get; set; }
+        public string Email { get; set; }
         [MaxLength(255)]
-        public string? Password { get; set; }
+        public string Password { get; set; }
         public int? RoleID { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
         public Guid? UserIn { get; set; }
         public Guid? UserUp { get; set; }
 
@@ -27,6 +27,6 @@ namespace BasaProject.Models
         public Boolean IsDeleted { get; set; } = false;
 
         [ForeignKey("RoleID")]
-        public virtual MsRole? Role { get; set; }
+        public virtual MsRole Role { get; set; }
     }
 }

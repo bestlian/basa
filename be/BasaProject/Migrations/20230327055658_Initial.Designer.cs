@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BasaProject.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230321081945_Initial")]
+    [Migration("20230327055658_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -82,6 +82,7 @@ namespace BasaProject.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("RoleName")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 

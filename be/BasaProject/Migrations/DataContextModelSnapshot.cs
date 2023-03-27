@@ -57,7 +57,7 @@ namespace BasaProject.Migrations
 
                     b.HasIndex("FirstWord");
 
-                    b.ToTable("MsBasaLemes");
+                    b.ToTable("MsBasaLemes", (string)null);
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsRole", b =>
@@ -79,6 +79,7 @@ namespace BasaProject.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("RoleName")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
@@ -90,7 +91,7 @@ namespace BasaProject.Migrations
 
                     b.HasKey("RoleID");
 
-                    b.ToTable("MsRoles");
+                    b.ToTable("MsRoles", (string)null);
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsUser", b =>
@@ -134,7 +135,7 @@ namespace BasaProject.Migrations
 
                     b.HasIndex("RoleID");
 
-                    b.ToTable("MsUsers");
+                    b.ToTable("MsUsers", (string)null);
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsWordList", b =>
@@ -177,7 +178,7 @@ namespace BasaProject.Migrations
 
                     b.HasKey("WordID");
 
-                    b.ToTable("MsWordLists");
+                    b.ToTable("MsWordLists", (string)null);
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsBasaLemes", b =>
