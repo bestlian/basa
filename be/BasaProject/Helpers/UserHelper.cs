@@ -31,6 +31,7 @@ namespace BasaProject.Helpers
                     RoleID = x.RoleID,
                     RoleName = x.Role.RoleName,
                     Password = x.Password,
+                    Name = x.Name
                 })
                 .ToList();
 
@@ -49,12 +50,41 @@ namespace BasaProject.Helpers
                     RoleID = x.RoleID,
                     RoleName = x.Role.RoleName,
                     Password = x.Password,
+                    Name = x.Name
                 })
                 .FirstOrDefault();
 
             if (user == null) return null;
 
             return user;
+        }
+
+        // get user by refreshToken
+        public static MsUser GetUserByRefreshToken(string token, DataContext _db)
+        {
+            var res = _db.MsUsers.Where(u => u.RefreshTokens.Any(t => t.Token == token))
+                .Include(x => x.RefreshTokens.OrderByDescending(y => y.Expires).Take(3))
+                .Include(x => x.Role)
+                .FirstOrDefault();
+
+            return res;
+        }
+
+        // update refreshToken
+        public static bool UpdateRefreshToken(TrUserRefreshToken mrt, DataContext _db)
+        {
+            try
+            {
+                _db.Entry(mrt).State = EntityState.Modified;
+                _db.SaveChanges();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.ErrorException(ex, mrt.UserID, _db);
+                return false;
+            }
         }
     }
 }

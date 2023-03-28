@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("BasaDB");
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connString));
 builder.Services.AddControllers();
+
 // configure DI for application services
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
@@ -92,12 +93,18 @@ if (app.Environment.IsDevelopment())
             });
 }
 
+// configure HTTP request pipeline
+{
+    // global cors policy
+    app.UseCors(x => x
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 
-app.UseRouting();
-app.UseAuthorization();
-// app.UseHttpsRedirection();
-app.MapControllers();
+    // custom jwt auth middleware
+    app.UseMiddleware<JwtMiddleware>();
 
-// custom jwt auth middleware
-app.UseMiddleware<JwtMiddleware>();
+    app.MapControllers();
+}
+
 app.Run();

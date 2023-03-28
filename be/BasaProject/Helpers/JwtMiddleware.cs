@@ -45,9 +45,15 @@ public class JwtMiddleware
 
             var jwtToken = (JwtSecurityToken)validatedToken;
             var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
+            var roleID = int.Parse(jwtToken.Claims.First(x => x.Type == "role").Value);
 
-            // attach user to context on successful jwt validation
-            //context.Items["User"] = userService.GetById(userId);
+            // return null if no user found with token
+            if (userId != null)
+            {
+                //context.Items["User"] = userService.GetById(userId);
+                context.Items["UserID"] = userId;
+                context.Items["RoleID"] = roleID;
+            }
         }
         catch
         {

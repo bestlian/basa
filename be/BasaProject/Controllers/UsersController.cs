@@ -1,11 +1,13 @@
 namespace BasaProject.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System;
+//using Microsoft.AspNetCore.Authorization;
 using BasaProject.Models;
 using BasaProject.Services;
 using BasaProject.Outputs;
 using BasaProject.Helpers;
-using Microsoft.AspNetCore.Authorization;
 using BCHash = BCrypt.Net.BCrypt;
 
 [ApiController]
@@ -44,10 +46,10 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-
-    [HttpGet("{id}")]
+    // GET ALL USER
+    [HttpGet("all")]
     [Produces("application/json")]
-    [Authorize(Roles = "1")]
+    [Authorize(Roles = 1)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(IList<UserResponse>), StatusCodes.Status200OK)]
     public IActionResult GetAll()
@@ -56,7 +58,19 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-    // create user
+    // GET ALL USER
+    [HttpGet("{id}")]
+    [Produces("application/json")]
+    [Authorize(Roles = 1)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<UserResponse>), StatusCodes.Status200OK)]
+    public IActionResult GetByID(Guid id)
+    {
+        var user = _userService.GetById(id);
+        return Ok(user);
+    }
+
+    // CREATE USER
     [HttpPost("create")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]

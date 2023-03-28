@@ -15,6 +15,13 @@ public class UserResponse
     public string Password { get; set; }
 }
 
+public class MsResponse
+{
+    public string TokenType { get; set; }
+    public string AccessToken { get; set; }
+    public int Expired { get; set; }
+}
+
 public class UserRequest
 {
     [Required(ErrorMessage = "Email harus diisi!")]

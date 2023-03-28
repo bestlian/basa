@@ -21,6 +21,5 @@ namespace BasaProject.Outputs
             RefreshToken = refreshToken;
         }
     }
-
 }
 

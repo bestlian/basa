@@ -26,4 +26,6 @@ public class DataContext : DbContext
     public DbSet<MsRole> MsRoles { get; set; }
     public DbSet<MsWordList> MsWordLists { get; set; }
     public DbSet<MsBasaLemes> MsBasaLemes { get; set; }
+    public DbSet<TrUserRefreshToken> TrUserRefreshTokens { get; set; }
+    public DbSet<TrErrorLog> TrErrorLogs { get; set; }
 }

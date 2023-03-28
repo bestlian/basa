@@ -28,5 +28,7 @@ namespace BasaProject.Models
 
         [ForeignKey("RoleID")]
         public virtual MsRole Role { get; set; }
+
+        public ICollection<TrUserRefreshToken> RefreshTokens { get; set; }
     }
 }

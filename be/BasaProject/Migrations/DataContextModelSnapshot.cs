@@ -57,7 +57,7 @@ namespace BasaProject.Migrations
 
                     b.HasIndex("FirstWord");
 
-                    b.ToTable("MsBasaLemes", (string)null);
+                    b.ToTable("MsBasaLemes");
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsRole", b =>
@@ -91,7 +91,7 @@ namespace BasaProject.Migrations
 
                     b.HasKey("RoleID");
 
-                    b.ToTable("MsRoles", (string)null);
+                    b.ToTable("MsRoles");
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsUser", b =>
@@ -135,7 +135,7 @@ namespace BasaProject.Migrations
 
                     b.HasIndex("RoleID");
 
-                    b.ToTable("MsUsers", (string)null);
+                    b.ToTable("MsUsers");
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsWordList", b =>
@@ -178,7 +178,114 @@ namespace BasaProject.Migrations
 
                     b.HasKey("WordID");
 
-                    b.ToTable("MsWordLists", (string)null);
+                    b.ToTable("MsWordLists");
+                });
+
+            modelBuilder.Entity("BasaProject.Models.TrErrorLog", b =>
+                {
+                    b.Property<Guid>("ErrorID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateIn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateUp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InnerException")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasMaxLength(1)
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("text");
+
+                    b.Property<string>("StackTrace")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserIn")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserUp")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ErrorID");
+
+                    b.HasIndex("UserIn");
+
+                    b.ToTable("TrErrorLogs");
+                });
+
+            modelBuilder.Entity("BasaProject.Models.TrUserRefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("DateIn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateUp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeviceType")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasMaxLength(1)
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ReplacedByToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("Revoked")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RevokedByIp")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("UserIn")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("UserUp")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("TrUserRefreshTokens");
                 });
 
             modelBuilder.Entity("BasaProject.Models.MsBasaLemes", b =>
@@ -201,9 +308,36 @@ namespace BasaProject.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("BasaProject.Models.TrErrorLog", b =>
+                {
+                    b.HasOne("BasaProject.Models.MsUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserIn")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BasaProject.Models.TrUserRefreshToken", b =>
+                {
+                    b.HasOne("BasaProject.Models.MsUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BasaProject.Models.MsRole", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("BasaProject.Models.MsUser", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }
