@@ -11,7 +11,7 @@ namespace BasaProject.Helpers
         {
             var user = _db.MsUsers.Where(x => x.Email.ToLower().Trim() == email.ToLower().Trim() && x.IsDeleted == false)
                 .Include(x => x.Role)
-                // .Include(x => x.RefreshTokens.OrderByDescending(y => y.Expires).Take(3))
+                .Include(x => x.RefreshTokens.OrderByDescending(y => y.Expires).Take(3))
                 .FirstOrDefault();
 
             if (user == null) return null;

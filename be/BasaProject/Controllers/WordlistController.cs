@@ -28,7 +28,7 @@ public class WordlistController : ControllerBase
         var alert = new Message();
         var userid = new Guid(HttpContext.Items["UserID"]?.ToString());
 
-        var check = _db.MsWordLists.FirstOrDefault(a => a.Word.ToLower() == f.Word.Trim().ToLower() && a.IsDeleted == false);
+        var check = WordlistHelper.Find(f.Word.Trim().ToLower(), _db);
         if (check != null)
         {
             alert.Msg = "Word has already exist!";
@@ -64,7 +64,7 @@ public class WordlistController : ControllerBase
         }
     }
 
-    // set role
+    // get word type
     [HttpGet("wordtype")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -77,6 +77,18 @@ public class WordlistController : ControllerBase
             new DropdownResponse { Name = "Basa Loma", Value = "loma" },
             new DropdownResponse { Name = "Basa Kasar", Value = "kasar" },
         };
+
+        return Ok(res);
+    }
+
+    // get word type
+    [HttpGet("search/{word}")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<WordlistResponse>), StatusCodes.Status200OK)]
+    public IActionResult Search(string word)
+    {
+        var res = WordlistHelper.Search(word, _db);
 
         return Ok(res);
     }

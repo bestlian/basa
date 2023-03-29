@@ -63,7 +63,8 @@ public class UserServices : IUserService
 
         var jwtToken = generateJwtToken(resp);
 
-        _db.TrUserRefreshTokens.Add(refreshToken);
+        _db.Add(refreshToken);
+        _db.SaveChanges();
 
         return new AuthenticateResponse(resp, jwtToken, refreshToken.Token);
     }

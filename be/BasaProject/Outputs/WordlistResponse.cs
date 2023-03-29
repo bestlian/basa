@@ -5,7 +5,12 @@ using System.ComponentModel.DataAnnotations;
 
 public class WordlistResponse
 {
-
+    public Guid WordID { get; set; }
+    public string Word { get; set; }
+    public string Description { get; set; }
+    public string Type { get; set; }
+    public string Indonesian { get; set; }
+    public string English { get; set; }
 }
 
 public class WordlistRequest
