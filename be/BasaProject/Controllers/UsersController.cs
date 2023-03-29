@@ -46,30 +46,6 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-    // GET ALL USER
-    [HttpGet("all")]
-    [Produces("application/json")]
-    [Authorize(Roles = 1)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(IList<UserResponse>), StatusCodes.Status200OK)]
-    public IActionResult GetAll()
-    {
-        var users = _userService.GetAll();
-        return Ok(users);
-    }
-
-    // GET ALL USER
-    [HttpGet("{id}")]
-    [Produces("application/json")]
-    [Authorize(Roles = 1)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(IList<UserResponse>), StatusCodes.Status200OK)]
-    public IActionResult GetByID(Guid id)
-    {
-        var user = _userService.GetById(id);
-        return Ok(user);
-    }
-
     // CREATE USER
     [HttpPost("create")]
     [Produces("application/json")]
@@ -116,6 +92,30 @@ public class UsersController : ControllerBase
         }
 
         return BadRequest();
+    }
+
+    // GET ALL USER
+    [HttpGet("all")]
+    [Produces("application/json")]
+    [Authorize(Roles = 1)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<UserResponse>), StatusCodes.Status200OK)]
+    public IActionResult GetAll()
+    {
+        var users = _userService.GetAll();
+        return Ok(users);
+    }
+
+    // GET USER BY ID
+    [HttpGet("{id}")]
+    [Produces("application/json")]
+    [Authorize(Roles = 1)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<UserResponse>), StatusCodes.Status200OK)]
+    public IActionResult GetByID(Guid id)
+    {
+        var user = _userService.GetById(id);
+        return Ok(user);
     }
 
     private string IpAddress()

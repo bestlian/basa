@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BasaProject.Models;
 using BasaProject.Outputs;
 using BasaProject.Helpers;
-using Microsoft.AspNetCore.Authorization;
+using BasaProject.Services;
 
 [ApiController]
 [Route("[controller]")]
@@ -16,24 +16,6 @@ public class RoleController : ControllerBase
     public RoleController(DataContext dataContext)
     {
         _db = dataContext;
-    }
-
-    // set role
-    [AllowAnonymous]
-    [HttpGet("all")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(IList<RoleResponse>), StatusCodes.Status200OK)]
-    public IActionResult GetAll()
-    {
-        IList<RoleResponse> response = _db.MsRoles.Where(a => a.IsDeleted == false)
-            .Select(a => new RoleResponse
-            {
-                RoleID = a.RoleID,
-                RoleName = a.RoleName
-            }).ToList();
-
-        return Ok(response);
     }
 
     // set role
@@ -76,4 +58,23 @@ public class RoleController : ControllerBase
             return StatusCode(500, alert);
         }
     }
+
+    // set role
+    [AllowAnonymous]
+    [HttpGet("all")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<RoleResponse>), StatusCodes.Status200OK)]
+    public IActionResult GetAll()
+    {
+        IList<RoleResponse> response = _db.MsRoles.Where(a => a.IsDeleted == false)
+            .Select(a => new RoleResponse
+            {
+                RoleID = a.RoleID,
+                RoleName = a.RoleName
+            }).ToList();
+
+        return Ok(response);
+    }
+
 }

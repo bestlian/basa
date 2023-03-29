@@ -12,6 +12,8 @@ namespace BasaProject.Models
         [MaxLength(255)]
         public string Word { get; set; }
         public string Desc { get; set; }
+        [MaxLength(25)]
+        public string Type { get; set; }
         [MaxLength(255)]
         public string Indonesian { get; set; }
         [MaxLength(255)]
@@ -27,6 +29,5 @@ namespace BasaProject.Models
 
         [MaxLength(1)]
         public Boolean IsDeleted { get; set; } = false;
-
     }
 }
