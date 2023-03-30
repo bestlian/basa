@@ -4,12 +4,13 @@ namespace BasaProject.Outputs
     {
         public int Statuscode { get; set; }
 
-        public string Msg { get; set; } = string.Empty;
+        public string Msg { get; set; }
+        public Dictionary<string, string[]> DetailError { get; set; }
     }
 
     public class Roles
     {
         public int RoleID { get; set; }
-        public string RoleName { get; set; } = string.Empty;
+        public string RoleName { get; set; }
     }
 }

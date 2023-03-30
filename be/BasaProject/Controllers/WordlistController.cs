@@ -64,7 +64,7 @@ public class WordlistController : ControllerBase
         }
     }
 
-    // get word type
+    // GET WORD TYPE
     [HttpGet("wordtype")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -81,7 +81,7 @@ public class WordlistController : ControllerBase
         return Ok(res);
     }
 
-    // get word type
+    // SEARCH WORD BY KEYWORD
     [HttpGet("search/{word}")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -92,4 +92,31 @@ public class WordlistController : ControllerBase
 
         return Ok(res);
     }
+
+    // PAIR BASA LEMES
+    [HttpGet("pairing")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<Message>), StatusCodes.Status200OK)]
+    public IActionResult Pairing(PairingRequest f)
+    {
+        var alert = new Message();
+        if (ModelState.IsValid)
+        {
+            var res = WordlistHelper.PairingBasaLemes(f, _db);
+
+            return StatusCode(res.Statuscode, res);
+        }
+
+        var errorList = ModelState.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+        );
+
+        alert.DetailError = errorList;
+        alert.Statuscode = 400;
+        alert.Msg = "Validation error";
+        return BadRequest(alert);
+    }
+
 }

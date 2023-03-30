@@ -6,7 +6,7 @@ namespace BasaProject.Helpers
 {
     public class WordlistHelper
     {
-        // get by word lower case and trim
+        // GET BY WORD
         public static WordlistResponse Find(string word, DataContext _db)
         {
             var res = _db.MsWordLists.Where(x => x.Word.ToLower().Trim() == word && x.IsDeleted == false)
@@ -24,7 +24,7 @@ namespace BasaProject.Helpers
             return res;
         }
 
-        // search
+        // SEARCH BY KEYWORD
         public static IList<WordlistResponse> Search(string word, DataContext _db)
         {
             var res = _db.MsWordLists.Where(x => x.Word.Contains(word) && x.IsDeleted == false)
@@ -40,6 +40,29 @@ namespace BasaProject.Helpers
                 .ToList();
 
             return res;
+        }
+
+        // PAIRING BASA LEMES
+        public static Message PairingBasaLemes(PairingRequest f, DataContext _db)
+        {
+            var wTrim = f.BadWord.ToLower().Trim();
+            var check = _db.MsBasaLemes.FirstOrDefault(a => a.SecondWord == f.BadWord.ToLower().Trim() && a.IsDeleted == false);
+            if (check != null) return new Message() { Statuscode = 400, Msg = "Word is already exist!" };
+
+            try
+            {
+                var basaLemes = new MsBasaLemes()
+                {
+                    FirstWord = f.WordID,
+                    SecondWord = wTrim
+                };
+
+                return new Message() { Statuscode = 200, Msg = "Word has been save" };
+            }
+            catch
+            {
+                return new Message() { Statuscode = 500, Msg = "Unexpected error occured!" };
+            }
         }
     }
 }
