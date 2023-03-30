@@ -57,6 +57,9 @@ namespace BasaProject.Helpers
                     SecondWord = wTrim
                 };
 
+                _db.Add(basaLemes);
+                _db.SaveChanges();
+
                 return new Message() { Statuscode = 200, Msg = "Word has been save" };
             }
             catch
