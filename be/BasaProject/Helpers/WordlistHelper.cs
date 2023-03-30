@@ -64,5 +64,25 @@ namespace BasaProject.Helpers
                 return new Message() { Statuscode = 500, Msg = "Unexpected error occured!" };
             }
         }
+
+        // GET LIST WORd BY TYPE
+        public static IList<WordlistResponse> GetByType(string type, int page, int size, DataContext _db)
+        {
+            var res = _db.MsWordLists.Where(x => x.Type == type && x.IsDeleted == false)
+                .Skip((page - 1) * size)
+                .Select(a => new WordlistResponse
+                {
+                    WordID = a.WordID,
+                    Word = a.Word,
+                    Type = a.Type,
+                    Description = a.Desc,
+                    Indonesian = a.Indonesian,
+                    English = a.English
+                })
+                .Take(size)
+                .ToList();
+
+            return res;
+        }
     }
 }

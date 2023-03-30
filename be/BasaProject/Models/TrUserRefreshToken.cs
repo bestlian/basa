@@ -7,9 +7,7 @@ namespace BasaProject.Models
     public class TrUserRefreshToken
     {
         [Key]
-        [JsonIgnore]
         public Guid Id { get; set; } = Guid.NewGuid();
-        [JsonIgnore]
         public Guid UserID { get; set; }
         public string Token { get; set; }
         public DateTime Expires { get; set; }

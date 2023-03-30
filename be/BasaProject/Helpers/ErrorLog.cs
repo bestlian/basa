@@ -16,7 +16,7 @@ namespace BasaProject.Helpers
                 UserIn = userid
             };
 
-            _db.TrErrorLogs.Add(log);
+            _db.Add(log);
             _db.SaveChanges();
         }
     }

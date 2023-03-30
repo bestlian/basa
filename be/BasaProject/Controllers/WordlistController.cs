@@ -64,6 +64,32 @@ public class WordlistController : ControllerBase
         }
     }
 
+    // PAIR BASA LEMES
+    [HttpPost("pairing")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<Message>), StatusCodes.Status200OK)]
+    public IActionResult Pairing(PairingRequest f)
+    {
+        var alert = new Message();
+        if (ModelState.IsValid)
+        {
+            var res = WordlistHelper.PairingBasaLemes(f, _db);
+
+            return StatusCode(res.Statuscode, res);
+        }
+
+        var errorList = ModelState.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+        );
+
+        alert.DetailError = errorList;
+        alert.Statuscode = 400;
+        alert.Msg = "Validation error";
+        return BadRequest(alert);
+    }
+
     // GET WORD TYPE
     [HttpGet("wordtype")]
     [Produces("application/json")]
@@ -93,30 +119,21 @@ public class WordlistController : ControllerBase
         return Ok(res);
     }
 
-    // PAIR BASA LEMES
-    [HttpGet("pairing")]
+    // GET WORD BY TYPE
+    [HttpGet("type/{type}")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(IList<Message>), StatusCodes.Status200OK)]
-    public IActionResult Pairing(PairingRequest f)
+    [ProducesResponseType(typeof(IList<WordlistResponse>), StatusCodes.Status200OK)]
+    public IActionResult GetByType(string type, int page, int size)
     {
-        var alert = new Message();
-        if (ModelState.IsValid)
+        if (string.IsNullOrEmpty(type) || page <= 0 || size <= 0)
         {
-            var res = WordlistHelper.PairingBasaLemes(f, _db);
-
-            return StatusCode(res.Statuscode, res);
+            return null;
         }
 
-        var errorList = ModelState.ToDictionary(
-            kvp => kvp.Key,
-            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-        );
+        var res = WordlistHelper.GetByType(type, page, size, _db);
 
-        alert.DetailError = errorList;
-        alert.Statuscode = 400;
-        alert.Msg = "Validation error";
-        return BadRequest(alert);
+        return Ok(res);
     }
 
 }
