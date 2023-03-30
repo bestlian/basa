@@ -71,20 +71,24 @@ namespace BasaProject.Helpers
         }
 
         // update refreshToken
-        public static bool UpdateRefreshToken(TrUserRefreshToken mrt, DataContext _db)
-        {
-            try
-            {
-                _db.Entry(mrt).State = EntityState.Modified;
-                _db.SaveChanges();
-                return true;
+        // public static bool UpdateRefreshToken(TrUserRefreshToken mrt, DataContext _db)
+        // {
+        //     try
+        //     {
+        //         //var rToken = _db.TrUserRefreshTokens.Find(mrt.Id);
+        //         //rToken = mrt;
 
-            }
-            catch (Exception ex)
-            {
-                ErrorLog.ErrorException(ex, mrt.UserID, _db);
-                return false;
-            }
-        }
+        //         _db.Entry(mrt).State = EntityState.Modified;
+        //         _db.SaveChanges();
+        //         return true;
+
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         ErrorLog.ErrorException(ex, mrt.UserID, _db);
+        //         return false;
+        //     }
+        // }
+
     }
 }

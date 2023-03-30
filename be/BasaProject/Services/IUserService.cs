@@ -11,6 +11,7 @@ using BasaProject.Models;
 using BCHash = BCrypt.Net.BCrypt;
 using BasaProject.Helpers;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 
 public interface IUserService
 {
@@ -139,20 +140,19 @@ public class UserServices : IUserService
 
         // replace old refresh token with a new one and save
         var newRefreshToken = generateRefreshToken(user.UserID, user.RoleID, ipAddress);
+
+        //revoke old token
         refreshToken.Revoked = DateTime.UtcNow;
         refreshToken.RevokedByIp = ipAddress;
         refreshToken.ReplacedByToken = newRefreshToken.Token;
         refreshToken.UserUp = user.UserID;
         refreshToken.DateUp = DateTime.Now;
-        user.RefreshTokens.Add(newRefreshToken);
-
-        //revoke old token
-        UserHelper.UpdateRefreshToken(refreshToken, _db);
 
         //save new refresh token
+        user.RefreshTokens.Add(newRefreshToken);
         newRefreshToken.UserID = user.UserID;
         newRefreshToken.UserIn = user.UserID;
-        _db.TrUserRefreshTokens.Add(newRefreshToken);
+        _db.Add(newRefreshToken);
         _db.SaveChanges();
 
 
@@ -187,9 +187,10 @@ public class UserServices : IUserService
         // revoke token and save
         refreshToken.Revoked = DateTime.UtcNow;
         refreshToken.RevokedByIp = ipAddress;
+        _db.SaveChanges();
 
         //EntityHelper.Update<MsUser>(user);
-        UserHelper.UpdateRefreshToken(refreshToken, _db);
+        //UserHelper.UpdateRefreshToken(refreshToken, _db);
 
 
         var tokenHandler = new JwtSecurityTokenHandler();
