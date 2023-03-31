@@ -7,7 +7,7 @@ using BasaProject.Helpers;
 using BasaProject.Services;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
 public class WordlistController : ControllerBase
 {

@@ -28,4 +28,5 @@ public class DataContext : DbContext
     public DbSet<MsBasaLemes> MsBasaLemes { get; set; }
     public DbSet<TrUserRefreshToken> TrUserRefreshTokens { get; set; }
     public DbSet<TrErrorLog> TrErrorLogs { get; set; }
+    public DbSet<TrClientApp> TrClientApps { get; set; }
 }

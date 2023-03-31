@@ -16,7 +16,9 @@ using Microsoft.EntityFrameworkCore;
 public interface IUserService
 {
     AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
+    ClientAuthResponse ClientAuthenticate(ClientRequest model, string ipAddress);
     AuthenticateResponse RefreshToken(string token, string ipAddress);
+    ClientAuthResponse ClientRefreshToken(string token, string ipAddress);
     IEnumerable<UserResponse> GetAll();
     UserResponse GetById(Guid id);
     // bool RevokeToken(string token, string ipAddress);
@@ -68,6 +70,40 @@ public class UserServices : IUserService
         _db.SaveChanges();
 
         return new AuthenticateResponse(resp, jwtToken, refreshToken.Token);
+    }
+
+    public ClientAuthResponse ClientAuthenticate(ClientRequest model, string ipAddress)
+    {
+        var client = ClientAppHelper.GetByClientID(model.CLIENT_ID, _db);
+
+        // return null if user not found
+        if (client == null) return null;
+        if (!BCHash.Verify(model.CLIENT_SECRET, client.ClientSecret)) return null;
+        var oldRefreshToken = client.RefreshTokens?.Where(x => x.IsActive == true && x.CreatedByIp == ipAddress).FirstOrDefault();
+
+        if (oldRefreshToken != null)
+        {
+            var result = ClientRefreshToken(oldRefreshToken.Token, ipAddress);
+            return result;
+        }
+
+        // authentication successful so generate jwt token
+        var refreshToken = generateRefreshToken(client.User.UserID, client.User.RoleID, ipAddress);
+        refreshToken.ClientID = client.ClientID;
+        refreshToken.UserIn = client.User.UserID;
+
+        var resp = new ClientResponse()
+        {
+            CLIENT_ID = client.ClientID,
+            RoleID = client.User.RoleID
+        };
+
+        var jwtToken = generateClientJwtToken(resp);
+
+        _db.Add(refreshToken);
+        _db.SaveChanges();
+
+        return new ClientAuthResponse(resp, jwtToken, refreshToken.Token);
     }
 
     public IEnumerable<UserResponse> GetAll()
@@ -196,5 +232,66 @@ public class UserServices : IUserService
         var tokenHandler = new JwtSecurityTokenHandler();
 
         return true;
+    }
+
+    private string generateClientJwtToken(ClientResponse val)
+    {
+        // generate token that is valid for 1 days
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[] { new Claim("id", val.CLIENT_ID.ToString()), new Claim(ClaimTypes.Role, val.RoleID.ToString()) }),
+            Expires = DateTime.Now.AddDays(1),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
+    public ClientAuthResponse ClientRefreshToken(string token, string ipAddress)
+    {
+        var client = ClientAppHelper.GetClientByRefreshToken(token, _db);
+
+        // return null if no user found with token
+        if (client == null) return null;
+
+        var refreshToken = client.RefreshTokens.Where(x => x.IsActive == true && x.CreatedByIp == ipAddress).FirstOrDefault();
+
+        // return null if token is no longer active
+        if (!refreshToken.IsActive) return null;
+
+        var date = DateTime.Now;
+        var startdate = date.AddMinutes(-1);
+        if (refreshToken.DateIn > startdate && refreshToken.DateIn < date) return null;
+
+        // replace old refresh token with a new one and save
+        var newRefreshToken = generateRefreshToken(client.ClientID, client.User.RoleID, ipAddress);
+
+        //revoke old token
+        refreshToken.Revoked = DateTime.UtcNow;
+        refreshToken.RevokedByIp = ipAddress;
+        refreshToken.ReplacedByToken = newRefreshToken.Token;
+        refreshToken.UserUp = client.User.UserID;
+        refreshToken.DateUp = DateTime.Now;
+
+        //save new refresh token
+        client.RefreshTokens.Add(newRefreshToken);
+        newRefreshToken.ClientID = client.ClientID;
+        newRefreshToken.UserIn = client.User.UserID;
+        _db.Add(newRefreshToken);
+        _db.SaveChanges();
+
+
+        var resp = new ClientResponse()
+        {
+            CLIENT_ID = client.ClientID,
+            RoleID = client.User.RoleID
+        };
+
+        // generate new jwt
+        var jwtToken = generateClientJwtToken(resp);
+
+        return new ClientAuthResponse(resp, jwtToken, newRefreshToken.Token);
     }
 }

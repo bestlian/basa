@@ -8,7 +8,8 @@ namespace BasaProject.Models
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid UserID { get; set; }
+        public Guid? UserID { get; set; }
+        public Guid? ClientID { get; set; }
         public string Token { get; set; }
         public DateTime Expires { get; set; }
         public bool IsExpired => DateTime.UtcNow >= Expires;
@@ -39,8 +40,12 @@ namespace BasaProject.Models
 
         [MaxLength(1)]
         public Boolean? IsDeleted { get; set; } = false;
+
         //[NotMapped]
         [ForeignKey("UserID")]
         public virtual MsUser User { get; set; }
+
+        [ForeignKey("ClientID")]
+        public virtual TrClientApp ClientApp { get; set; }
     }
 }

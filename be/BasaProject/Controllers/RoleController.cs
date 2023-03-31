@@ -7,8 +7,9 @@ using BasaProject.Helpers;
 using BasaProject.Services;
 
 [ApiController]
-[Route("[controller]")]
-[Authorize]
+[Route("api/[controller]")]
+[Authorize(Roles = 1)]
+[ApiExplorerSettings(IgnoreApi = true)]
 public class RoleController : ControllerBase
 {
     private readonly DataContext _db;

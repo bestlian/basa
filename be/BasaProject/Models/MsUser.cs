@@ -30,5 +30,6 @@ namespace BasaProject.Models
         public virtual MsRole Role { get; set; }
 
         public ICollection<TrUserRefreshToken> RefreshTokens { get; set; }
+        public ICollection<TrClientApp> ClientApps { get; set; }
     }
 }

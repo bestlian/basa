@@ -11,8 +11,9 @@ using BasaProject.Helpers;
 using BCHash = BCrypt.Net.BCrypt;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
+[ApiExplorerSettings(IgnoreApi = true)]
 public class UsersController : ControllerBase
 {
     private IUserService _userService;
@@ -47,6 +48,7 @@ public class UsersController : ControllerBase
     }
 
     // CREATE USER
+    [Authorize(Roles = 1)]
     [HttpPost("create")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -109,13 +111,25 @@ public class UsersController : ControllerBase
     // GET USER BY ID
     [HttpGet("{id}")]
     [Produces("application/json")]
-    [Authorize(Roles = 1)]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(IList<UserResponse>), StatusCodes.Status200OK)]
     public IActionResult GetByID(Guid id)
     {
         var user = _userService.GetById(id);
         return Ok(user);
+    }
+
+    // GENERATE CLIENT SECRET
+    [HttpGet("secret/{id}")]
+    [Produces("application/json")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ClientAppResponse), StatusCodes.Status200OK)]
+    public IActionResult GenerateClientApp(Guid id)
+    {
+        var res = ClientAppHelper.Generate(id, _db);
+        return Ok(res);
     }
 
     private string IpAddress()

@@ -83,18 +83,28 @@ var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI(c =>
+//             {
+//                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basa Project");
+//                 c.RoutePrefix = string.Empty;  // Set Swagger UI at apps root
+//                 c.DefaultModelsExpandDepth(-1);
+//             });
+// }
+
+// configure HTTP request pipeline
 {
+    // swagger UI
     app.UseSwagger();
     app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basa Project");
                 c.RoutePrefix = string.Empty;  // Set Swagger UI at apps root
+                c.DefaultModelsExpandDepth(-1);
             });
-}
 
-// configure HTTP request pipeline
-{
     // global cors policy
     app.UseCors(x => x
         .AllowAnyOrigin()
