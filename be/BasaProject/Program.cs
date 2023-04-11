@@ -101,7 +101,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basa Project");
-                c.RoutePrefix = string.Empty;  // Set Swagger UI at apps root
+                c.RoutePrefix = "api/swagger"; //string.Empty;  // Set Swagger UI at apps root
                 c.DefaultModelsExpandDepth(-1);
             });
 
@@ -110,6 +110,11 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader());
+
+
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
+    app.UseRouting();
 
     // custom jwt auth middleware
     app.UseMiddleware<JwtMiddleware>();
